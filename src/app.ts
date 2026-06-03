@@ -31,16 +31,19 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Habit Tracker API is running' });
 });
 
-const PORT = process.env.PORT || 5000;
-const MONGO_URI = process.env.MONGODB_URI || '';
+if (process.env.NODE_ENV !== 'test') {
+  const PORT = process.env.PORT || 5000;
+  const MONGO_URI = process.env.MONGODB_URI || '';
 
-// first connect to MongoDB, then start the server
-mongoose
-  .connect(MONGO_URI)
-  .then(() => {
-    console.log('✅ Connected to MongoDB');
-    app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
-  })
-  .catch((err) => console.error('❌ MongoDB connection error:', err));
+  mongoose
+    .connect(MONGO_URI)
+    .then(() => {
+      console.log('✅ Connected to MongoDB');
+      app.listen(PORT, () =>
+        console.log(`✅ Server running on port ${PORT}`)
+      );
+    })
+    .catch((err) => console.error('❌ MongoDB connection error:', err));
+}
 
 export default app;
