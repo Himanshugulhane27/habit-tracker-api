@@ -1,52 +1,41 @@
 import { Response } from 'express';
 import Habit from '../models/Habit';
 import { AuthRequest } from '../middleware/auth.middleware';
+import { apiResponse } from '../utils/ApiResponse';
 
-// =====================
-// CREATE HABIT
-// =====================
 export const createHabit = async (req: AuthRequest, res: Response) => {
   try {
     const { title, description, frequency, tags, reminderTime } = req.body;
 
-    // title and frequency are required
     if (!title || !frequency) {
-      return res.status(400).json({ message: 'Title and frequency are required' });
+      return apiResponse(res, 400, 'Title and frequency are required');
     }
 
-    // create habit and link it to logged in user
     const habit = await Habit.create({
       title,
       description,
       frequency,
       tags: tags || [],
       reminderTime: reminderTime || '',
-      userId: req.user?.userId, // comes from JWT middleware
+      userId: req.user?.userId,
     });
 
-    res.status(201).json({ message: 'Habit created successfully', habit });
+    return apiResponse(res, 201, 'Habit created successfully', { habit });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    return apiResponse(res, 500, 'Server error');
   }
 };
 
-// =====================
-// GET ALL HABITS
-// =====================
 export const getHabits = async (req: AuthRequest, res: Response) => {
   try {
-    // get tag filter from query string e.g. /habits?tag=health
     const { tag, page = '1', limit = '10' } = req.query;
 
-    // build filter - only get habits belonging to logged in user
     const filter: any = { userId: req.user?.userId };
 
-    // if tag is provided, filter by tag
     if (tag) {
       filter.tags = { $in: [tag] };
     }
 
-    // pagination
     const pageNum = parseInt(page as string);
     const limitNum = parseInt(limit as string);
     const skip = (pageNum - 1) * limitNum;
@@ -54,11 +43,11 @@ export const getHabits = async (req: AuthRequest, res: Response) => {
     const habits = await Habit.find(filter)
       .skip(skip)
       .limit(limitNum)
-      .sort({ createdAt: -1 }); // newest first
+      .sort({ createdAt: -1 });
 
     const total = await Habit.countDocuments(filter);
 
-    res.status(200).json({
+    return apiResponse(res, 200, 'Habits retrieved successfully', {
       habits,
       pagination: {
         total,
@@ -68,70 +57,61 @@ export const getHabits = async (req: AuthRequest, res: Response) => {
       },
     });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    return apiResponse(res, 500, 'Server error');
   }
 };
 
-// =====================
-// GET SINGLE HABIT
-// =====================
 export const getHabitById = async (req: AuthRequest, res: Response) => {
   try {
     const habit = await Habit.findOne({
       _id: req.params.id,
-      userId: req.user?.userId, // make sure habit belongs to logged in user
+      userId: req.user?.userId,
     });
 
     if (!habit) {
-      return res.status(404).json({ message: 'Habit not found' });
+      return apiResponse(res, 404, 'Habit not found');
     }
 
-    res.status(200).json({ habit });
+    return apiResponse(res, 200, 'Habit retrieved successfully', { habit });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    return apiResponse(res, 500, 'Server error');
   }
 };
 
-// =====================
-// UPDATE HABIT
-// =====================
 export const updateHabit = async (req: AuthRequest, res: Response) => {
   try {
     const habit = await Habit.findOneAndUpdate(
       {
         _id: req.params.id,
-        userId: req.user?.userId, // make sure habit belongs to logged in user
+        userId: req.user?.userId,
       },
-      req.body, // update with whatever fields are sent
-      { new: true } // return updated document
+      req.body,
+      { new: true }
     );
 
     if (!habit) {
-      return res.status(404).json({ message: 'Habit not found' });
+      return apiResponse(res, 404, 'Habit not found');
     }
 
-    res.status(200).json({ message: 'Habit updated successfully', habit });
+    return apiResponse(res, 200, 'Habit updated successfully', { habit });
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    return apiResponse(res, 500, 'Server error');
   }
 };
 
-// =====================
-// DELETE HABIT
-// =====================
 export const deleteHabit = async (req: AuthRequest, res: Response) => {
   try {
     const habit = await Habit.findOneAndDelete({
       _id: req.params.id,
-      userId: req.user?.userId, // make sure habit belongs to logged in user
+      userId: req.user?.userId,
     });
 
     if (!habit) {
-      return res.status(404).json({ message: 'Habit not found' });
+      return apiResponse(res, 404, 'Habit not found');
     }
 
-    res.status(200).json({ message: 'Habit deleted successfully' });
+    return apiResponse(res, 200, 'Habit deleted successfully');
   } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    return apiResponse(res, 500, 'Server error');
   }
 };
