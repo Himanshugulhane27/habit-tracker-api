@@ -35,14 +35,13 @@ const UserSchema = new Schema<IUser>(
 
 // THIS RUNS AUTOMATICALLY BEFORE SAVING USER TO DATABASE
 // It hashes the password so plain text is never stored
-UserSchema.pre('save', async function (next) {
+UserSchema.pre('save', async function () {
   // only hash if password was changed or is new
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password')) return;
 
   // bcrypt turns "mypassword123" into "$2a$10$xyz..." 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
-  next();
 });
 
 // this method is used during login to check if entered password is correct
