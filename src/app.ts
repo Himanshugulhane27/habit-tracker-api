@@ -3,11 +3,22 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.routes';
 import habitRoutes from './routes/habit.routes';
+import rateLimit from 'express-rate-limit';
 
 dotenv.config(); // reads your .env file
 const app = express();
 
 app.use(express.json()); // allows Express to read JSON from request body
+
+// rate limiting - max 100 requests per hour per IP
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour in milliseconds
+  max: 100, // max 100 requests per hour
+  message: { message: 'Too many requests, please try again after an hour' },
+});
+
+app.use(limiter); // apply to all routes
+
 
 // all auth routes will start with /api/auth
 app.use('/api/auth', authRoutes);
