@@ -24,22 +24,22 @@ Personal Habit Tracking & Streak Management REST API — A backend service built
 
 ### Core Features
 
-✅  User registration and login
-✅  JWT authentication
-✅  Habit CRUD operations (Create, Read, Update, Delete)
-✅  Daily habit tracking with duplicate prevention
-✅  7-day history retrieval
-✅  Password hashing with bcryptjs
-✅  Protected routes via JWT middleware
+- ✅ User registration and login
+- ✅ JWT authentication
+- ✅ Habit CRUD operations (Create, Read, Update, Delete)
+- ✅ Daily habit tracking with duplicate prevention
+- ✅ 7-day history retrieval
+- ✅ Password hashing with bcryptjs
+- ✅ Protected routes via JWT middleware
 
 ### Bonus Features
 
-🔥 Streak Calculation — Consecutive days completed  
-🏷️ Tags & Filtering — Filter habits by tag (`GET /habits?tag=health`)  
-⏰ Reminder Time — Store reminder time per habit  
-📄 Pagination — Paginate habits list with `page` and `limit` params  
-🛡️ Rate Limiting — 100 requests/hour per IP  
-🧪 Automated Tests — Jest + Supertest + MongoMemoryServer  
+- 🔥 Streak Calculation — Consecutive days completed  
+- 🏷️ Tags & Filtering — Filter habits by tag (`GET /habits?tag=health`)  
+- ⏰ Reminder Time — Store reminder time per habit  
+- 📄 Pagination — Paginate habits list with `page` and `limit` params  
+- 🛡️ Rate Limiting — 100 requests/hour per IP  
+- 🧪 Automated Tests — Jest + Supertest + MongoMemoryServer  
 
 ---
 
