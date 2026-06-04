@@ -600,7 +600,7 @@ Application-level duplicate checks aren't enough — two requests hitting simult
 
 ### Why Joi Validation?
 
-Controllers should only handle business logic — not input checking. Joi validation middleware runs before the controller and rejects invalid requests early with clear error messages. This keeps controllers clean and ensures bad data never reaches the database.
+I added Joi to validate request data before it reaches the controller. If someone sends an empty name or invalid email, it gets rejected immediately with a clear message. Without this, bad data could reach the database directly.
 
 ### Why MongoMemoryServer for Tests?
 
