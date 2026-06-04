@@ -30,6 +30,7 @@ Personal Habit Tracking & Streak Management REST API — A backend service built
 - ✅ **7-Day History** — View completion status for the last 7 days
 - ✅ **Password Security** — bcrypt hashing with salt rounds
 - ✅ **Route Protection** — JWT middleware on all habit routes
+- ✅ **Input Validation** — Joi schema validation on all routes
 
 ### Bonus Features
 
@@ -52,6 +53,7 @@ Personal Habit Tracking & Streak Management REST API — A backend service built
 | Authentication   | JWT (jsonwebtoken) + bcryptjs       |
 | Date Handling    | Day.js                              |
 | Testing          | Jest + Supertest + MongoMemoryServer|
+| Validation       | Joi                                 |
 | Security         | express-rate-limit                  |
 
 ---
