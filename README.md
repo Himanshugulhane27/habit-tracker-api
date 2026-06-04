@@ -544,7 +544,12 @@ habit-tracker-api/
 │   │   └── tracking.controller.ts   # Track & history handlers
 │   │
 │   ├── middleware/
-│   │   └── auth.middleware.ts       # JWT verification
+│   │   ├── auth.middleware.ts       # JWT verification
+│   │   └── validate.middleware.ts   # Joi request validation
+│   │
+│   ├── validators/
+│   │   ├── auth.validator.ts        # Auth validation schemas
+│   │   └── habit.validator.ts       # Habit validation schemas
 │   │
 │   ├── models/
 │   │   ├── User.ts                  # User schema
@@ -592,6 +597,10 @@ Embedding logs inside habits would make the documents grow unbounded. A separate
 ### Why a Unique Compound Index on `{ habitId, date }`?
 
 Application-level duplicate checks aren't enough — two requests hitting simultaneously can both pass the check. The index enforces it at the database level so it's physically impossible to log the same habit twice in a day.
+
+### Why Joi Validation?
+
+Controllers should only handle business logic — not input checking. Joi validation middleware runs before the controller and rejects invalid requests early with clear error messages. This keeps controllers clean and ensures bad data never reaches the database.
 
 ### Why MongoMemoryServer for Tests?
 
